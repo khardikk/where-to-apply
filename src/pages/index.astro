@@ -84,7 +84,7 @@ const description = `${SOURCES.length} hand-checked places to find software, AI 
       <p class="mt-2 mb-6 max-w-2xl text-fg-2">
         Type a role and a city. Every button opens a search straight into the places companies post first.
       </p>
-      <LinkBuilder client:visible />
+      <LinkBuilder client:idle />
     </section>
 
     <section id="directory" class="scroll-mt-0 pt-16 md:pt-20" aria-labelledby="directory-h">
@@ -116,8 +116,8 @@ const description = `${SOURCES.length} hand-checked places to find software, AI 
       <p class="label">Templates</p>
       <h2 id="templates-h" class="mt-2 mb-6 text-2xl font-semibold tracking-tight md:text-3xl">Messages to send</h2>
       <div class="grid gap-3 md:grid-cols-2">
-        <CopyTemplate client:visible title="Cold DM to a hiring manager" text={DM_TEMPLATE} />
-        <CopyTemplate client:visible title="Asking for a referral" text={REFERRAL_TEMPLATE} />
+        <CopyTemplate client:idle title="Cold DM to a hiring manager" text={DM_TEMPLATE} />
+        <CopyTemplate client:idle title="Asking for a referral" text={REFERRAL_TEMPLATE} />
       </div>
     </section>
 

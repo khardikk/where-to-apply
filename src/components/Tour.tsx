@@ -61,7 +61,7 @@ const STEPS: Step[] = [
   },
   {
     title: 'Tick off what you’ve covered',
-    body: 'Hit the circle on a card once you’ve checked it. Your progress stays in this browser, and "Hide checked" shows only what’s left.',
+    body: 'Hit the circle on a card once you’ve checked it. "My checked" lists everything you’ve covered, with dates, and "Hide checked" shows only what’s left.',
     target: 'directory',
     cta: 'Start ticking',
     art: () => (
