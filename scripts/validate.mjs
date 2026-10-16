@@ -46,6 +46,9 @@ for (const [i, s] of SOURCES.entries()) {
     else if (s.url !== `https://x.com/${s.x}`) err('url should be x(handle)');
   }
 
+  if (s.added !== undefined && (!/^\d{4}-\d{2}-\d{2}$/.test(s.added) || Number.isNaN(Date.parse(s.added))))
+    err(`added "${s.added}" must be a date like 2026-11-02`);
+
   const id = sourceId(s);
   if (seenIds.has(id)) err(`same category and name as #${seenIds.get(id)}`);
   seenIds.set(id, i + 1);

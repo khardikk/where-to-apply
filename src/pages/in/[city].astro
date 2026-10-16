@@ -1,0 +1,24 @@
+---
+// One page per city (and remote), e.g. /in/bengaluru, with the link builder preset to it.
+import Page from '../../components/Page.astro';
+import { CITY_PAGES } from '../../data/cities';
+import { SOURCES } from '../../data/sources';
+
+export function getStaticPaths() {
+  return CITY_PAGES.map((city) => ({ params: { city: city.slug }, props: { city } }));
+}
+
+const { city } = Astro.props;
+const n = SOURCES.filter((s) => s.tags.includes(city.tag)).length;
+const where = city.tag === 'Remote' ? `${city.name.toLowerCase()} tech and AI jobs` : `tech and AI jobs in ${city.name}`;
+---
+
+<Page
+  title={`Where to apply for ${where} · Where to Apply`}
+  description={`Where to find ${where}: ${n} hand-checked job boards, VC portfolio boards, communities and people, plus searches preset to ${city.name}.`}
+  heading={`Where to apply in ${city.name}.`}
+  lede={`${city.blurb} The link builder below is already set to ${city.name}, and the list starts with the ${n} sources tagged ${city.tag}.`}
+  crumb={city.name}
+  initialTags={[city.tag]}
+  initialPlace={city.name}
+/>

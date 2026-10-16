@@ -17,6 +17,7 @@ This is one hand-checked list of them, plus the search tricks that find roles be
   see it all in a dated "My checked" list you can copy. Everything stays in your browser; filters live in the URL, so a
   view can be shared.
 - **Tips and templates:** what gets replies, plus a cold DM and a referral ask you can copy.
+- **A page per category and city:** `/c/vc`, `/in/bengaluru` and so on, with filters and searches preset.
 - **Every link is checked:** a script opens every URL and verifies every X account, and runs weekly in CI.
 
 No sign-up, no affiliate links. Anonymous page analytics (Vercel Web Analytics and PostHog) only.
@@ -60,7 +61,8 @@ src/data/sources.ts             every source, category, tip and template: the fi
 src/components/Directory.tsx    search, filters and the checklist
 src/components/LinkBuilder.tsx  the role + city search builder
 src/components/Tour.tsx         the first-visit walkthrough
-src/pages/index.astro           the page
+src/components/Page.astro       the page, shared by /, /c/<category> and /in/<city>
+src/data/cities.ts              the city pages
 scripts/validate.mjs            data rules, run on every pull request
 scripts/check-links.mjs         network check, run every Monday
 scripts/logos.mjs               self-hosts logos so visitors never call third-party image services

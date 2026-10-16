@@ -24,10 +24,25 @@ const track = (e: PointerEvent<HTMLElement>) => {
   e.currentTarget.style.setProperty('--y', `${e.clientY - r.top}px`);
 };
 
-export default function Directory({ items, categories }: { items: Item[]; categories: Category[] }) {
+export default function Directory({
+  items,
+  categories,
+  initialCat = 'all',
+  initialTags = [],
+  newIds = [],
+}: {
+  items: Item[];
+  categories: Category[];
+  /** Category and city pages open with these filters applied. */
+  initialCat?: CategoryId | 'all';
+  initialTags?: Tag[];
+  /** Sources added recently, shown with a "New" badge. */
+  newIds?: string[];
+}) {
   const [query, setQuery] = useState('');
-  const [cat, setCat] = useState<CategoryId | 'all'>('all');
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [cat, setCat] = useState<CategoryId | 'all'>(initialCat);
+  const [tags, setTags] = useState<Tag[]>(initialTags);
+  const isNew = useMemo(() => new Set(newIds), [newIds]);
   // id -> when it was checked (ms). 0 = checked before dates were recorded.
   const [done, setDone] = useState<Map<string, number>>(new Map());
   const [hideDone, setHideDone] = useState(false);
@@ -49,13 +64,25 @@ export default function Directory({ items, categories }: { items: Item[]; catego
     const t = (p.get('tags') ?? '').split(',').filter((x): x is Tag => TAGS.includes(x as Tag));
     if (t.length) setTags(t);
     if (p.get('view') === 'checked') setView('checked');
+
+    // The hero search and its preset chips send filters here.
+    const onFilter = (e: Event) => {
+      const d = (e as CustomEvent<{ q?: string; tag?: Tag; cat?: CategoryId }>).detail;
+      setView('all');
+      setQuery(d.q ?? '');
+      setCat(d.cat ?? 'all');
+      setTags(d.tag ? [d.tag] : []);
+    };
+    window.addEventListener('wta:filter', onFilter);
+    return () => window.removeEventListener('wta:filter', onFilter);
   }, []);
 
   useEffect(() => {
     const p = new URLSearchParams();
     if (query) p.set('q', query);
-    if (cat !== 'all') p.set('cat', cat);
-    if (tags.length) p.set('tags', tags.join(','));
+    // Category and city pages already carry their defaults in the path, so only differences go in the URL.
+    if (cat !== initialCat) p.set('cat', cat);
+    if (tags.join(',') !== initialTags.join(',')) p.set('tags', tags.join(','));
     if (view === 'checked') p.set('view', 'checked');
     const qs = p.toString();
     history.replaceState(null, '', `${location.pathname}${qs ? `?${qs}` : ''}${location.hash}`);
@@ -437,6 +464,11 @@ export default function Directory({ items, categories }: { items: Item[]; catego
                           <span className="ml-1 text-fg-3 transition-transform group-hover:text-fg" aria-hidden="true">
                             ↗
                           </span>
+                          {isNew.has(s.id) && (
+                            <span className="num ml-1.5 rounded bg-[var(--accent)] px-1 py-px align-[2px] text-[9.5px] font-semibold tracking-wide text-bg">
+                              NEW
+                            </span>
+                          )}
                         </h3>
                         <p className="num truncate text-[11.5px] text-fg-3">{s.x ? `@${s.x}` : host(s.url)}</p>
                       </div>

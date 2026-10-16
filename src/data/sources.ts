@@ -42,7 +42,11 @@ export type Source = {
   x?: string;
   /** Website whose icon stands in when an X avatar can't be fetched. */
   site?: string;
+  /** Date it was added (YYYY-MM-DD). Shows a "New" badge for NEW_FOR_DAYS days. Leave out for the launch list. */
+  added?: string;
 };
+
+export const NEW_FOR_DAYS = 21;
 
 const x = (handle: string) => `https://x.com/${handle}`;
 

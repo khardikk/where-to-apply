@@ -50,6 +50,7 @@ A person or account on X uses the `x()` helper:
 | `note`     | One line, 90 characters max. Say why it's useful, plainly. No hype words, no emoji, no dashes             |
 | `x`        | People and accounts on X only: the handle without `@`                                                     |
 | `site`     | Optional. A website whose icon stands in if the logo or avatar can't be fetched                           |
+| `added`    | Today's date (`2026-11-02`). New sources get a "New" badge for 21 days                                     |
 
 Writing a good `note`: say what's different about it. "Founders post directly, monthly thread" beats "Great place to
 find jobs!". Don't make claims you can't back up (rankings, response rates, "the best").

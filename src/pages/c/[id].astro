@@ -1,0 +1,21 @@
+---
+// One page per category, e.g. /c/vc, with the list filtered to it.
+import Page from '../../components/Page.astro';
+import { CATEGORIES, SOURCES } from '../../data/sources';
+
+export function getStaticPaths() {
+  return CATEGORIES.map((c) => ({ params: { id: c.id }, props: { c } }));
+}
+
+const { c } = Astro.props;
+const n = SOURCES.filter((s) => s.category === c.id).length;
+---
+
+<Page
+  title={`${c.title}: ${n} places to apply · Where to Apply`}
+  description={`${n} hand-checked ${c.title.toLowerCase()} for software, AI engineer and FDE roles in India and remote. ${c.blurb}`}
+  heading={c.title}
+  lede={`${c.blurb} ${n} picks below, plus every other category if you scroll.`}
+  crumb={c.short}
+  initialCat={c.id}
+/>

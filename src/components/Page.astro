@@ -1,0 +1,239 @@
+---
+// The whole page. Used by the home page, /c/<category> and /in/<city>, which preset the filters.
+import { Image } from 'astro:assets';
+import { IconBrandGithub } from '@tabler/icons-react';
+import Base from '../layouts/Base.astro';
+import CopyTemplate from './CopyTemplate';
+import Directory from './Directory';
+import GridBackground from './GridBackground.astro';
+import HeroSearch from './HeroSearch';
+import LinkBuilder from './LinkBuilder';
+import Spotlight from './Spotlight.astro';
+import ThemeToggle from './ThemeToggle';
+import Tour from './Tour';
+import avatar from '../assets/avatar.jpg';
+import logos from '../data/logos.json';
+import { CITY_PAGES } from '../data/cities';
+import {
+  CATEGORIES,
+  CHECKED_ON,
+  DM_TEMPLATE,
+  NEW_FOR_DAYS,
+  REFERRAL_TEMPLATE,
+  SOURCES,
+  TIPS,
+  sourceId,
+  type CategoryId,
+  type Tag,
+} from '../data/sources';
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  lede: string;
+  crumb?: string;
+  initialCat?: CategoryId | 'all';
+  initialTags?: Tag[];
+  initialPlace?: string;
+}
+
+const { title, description, heading, lede, crumb, initialCat = 'all', initialTags = [], initialPlace } = Astro.props;
+
+const REPO = 'https://github.com/khardikk/where-to-apply';
+const have = new Set(logos);
+const items = SOURCES.map((s) => ({ ...s, id: sourceId(s), hasLogo: have.has(sourceId(s)) }));
+const cutoff = Date.now() - NEW_FOR_DAYS * 86400000;
+const newIds = SOURCES.filter((s) => s.added && Date.parse(s.added) >= cutoff).map(sourceId);
+const checked = new Date(`${CHECKED_ON}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const people = SOURCES.filter((s) => s.category === 'people' || s.category === 'orgs').length;
+
+const byTag = (t: Tag) => SOURCES.filter((s) => s.tags.includes(t)).length;
+const byCat = (c: CategoryId) => SOURCES.filter((s) => s.category === c).length;
+const presets = [
+  { label: 'India', count: byTag('India'), tag: 'India' },
+  { label: 'Remote', count: byTag('Remote'), tag: 'Remote' },
+  { label: 'AI', count: byTag('AI'), tag: 'AI' },
+  { label: 'FDE', count: byTag('FDE'), tag: 'FDE' },
+  { label: 'VC boards', count: byCat('vc'), cat: 'vc' },
+  { label: 'People on X', count: byCat('people'), cat: 'people' },
+  { label: 'Communities', count: byCat('communities'), cat: 'communities' },
+];
+
+const steps = [
+  { n: 1, title: 'Pick where to look', body: `Search or filter ${SOURCES.length} places by category, tag or city.`, href: '#directory' },
+  { n: 2, title: 'Find roles first', body: 'Open ready-made searches on the job sites startups post to first.', href: '#search' },
+  { n: 3, title: 'Reach out', body: 'Copy a cold DM or a referral ask and send it to a person, not a portal.', href: '#templates' },
+];
+---
+
+<Base title={title} description={description}>
+  <div class="fixed right-4 bottom-4 z-50">
+    <ThemeToggle client:idle />
+  </div>
+
+  <header class="relative overflow-hidden border-b border-line">
+    <GridBackground />
+    <Spotlight />
+    <div class="wrap relative pt-20 pb-14 md:pt-28 md:pb-20">
+      <div class="flex flex-wrap items-center gap-2">
+        <a
+          href="https://hardikk.dev"
+          class="inline-flex items-center gap-2 rounded-full border border-line bg-card/60 py-1 pr-3 pl-1 text-xs text-fg-2 backdrop-blur transition-colors hover:text-fg"
+        >
+          <Image src={avatar} alt="" width={48} height={48} class="size-6 rounded-full" loading="eager" />
+          Made by Hardikk Kamboj
+        </a>
+        <a
+          href={REPO}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-full border border-line bg-card/60 px-3 py-1 text-xs text-fg-2 backdrop-blur transition-colors hover:border-line-2 hover:text-fg"
+        >
+          <IconBrandGithub className="size-3.5" stroke={1.8} />
+          Contribute
+        </a>
+        <span class="num rounded-full border border-line bg-card/60 px-3 py-1 text-xs text-fg-3 backdrop-blur">Free · no sign-up</span>
+      </div>
+
+      {
+        crumb && (
+          <nav class="num mt-6 text-xs text-fg-3">
+            <a href="/" class="hover:text-fg">
+              Where to Apply
+            </a>
+            <span aria-hidden="true"> / </span>
+            <span class="text-fg-2">{crumb}</span>
+          </nav>
+        )
+      }
+
+      <h1 class="mt-6 max-w-3xl text-[2.6rem] leading-[1.02] font-semibold tracking-[-0.04em] md:text-7xl">{heading}</h1>
+      <p class="mt-5 max-w-2xl text-lg text-fg-2 md:text-xl">{lede}</p>
+
+      <HeroSearch client:load total={SOURCES.length} presets={presets} />
+
+      <dl class="num mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+        <div><dt class="sr-only">Sources</dt><dd><b class="text-fg text-2xl font-medium">{SOURCES.length}</b> <span class="text-fg-3">sources</span></dd></div>
+        <div><dt class="sr-only">Categories</dt><dd><b class="text-fg text-2xl font-medium">{CATEGORIES.length}</b> <span class="text-fg-3">categories</span></dd></div>
+        <div><dt class="sr-only">People and accounts</dt><dd><b class="text-fg text-2xl font-medium">{people}</b> <span class="text-fg-3">people and accounts on X</span></dd></div>
+        <div><dt class="sr-only">Checked</dt><dd><span class="text-fg-3">every link checked</span> <b class="text-fg font-medium">{checked}</b></dd></div>
+      </dl>
+
+      <div class="mt-7 flex flex-wrap items-center gap-3">
+        <a href="#search" class="inline-flex h-10 items-center rounded-full border border-line-2 bg-card/50 px-5 text-sm font-medium text-fg backdrop-blur transition-colors hover:bg-hover">
+          Find roles first
+        </a>
+        <a href="#tips" class="inline-flex h-10 items-center px-2 text-sm font-medium text-fg-2 transition-colors hover:text-fg">Tips and templates</a>
+        <Tour client:load />
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <ol class="mt-10 grid gap-3 sm:grid-cols-3" aria-label="How it works">
+      {
+        steps.map((s) => (
+          <li>
+            <a href={s.href} class="group flex h-full gap-3 rounded-xl border border-line bg-card p-4 transition-colors hover:border-line-2">
+              <span class="num grid size-7 shrink-0 place-items-center rounded-full border border-line-2 text-xs text-fg">{s.n}</span>
+              <span>
+                <span class="block text-sm font-medium text-fg">{s.title}</span>
+                <span class="mt-0.5 block text-[13px] leading-snug text-fg-3">{s.body}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+
+    <section id="search" class="reveal scroll-mt-6 pt-16 md:pt-20" aria-labelledby="search-h">
+      <p class="label">Link builder</p>
+      <h2 id="search-h" class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Find roles before they hit LinkedIn</h2>
+      <p class="mt-2 mb-6 max-w-2xl text-fg-2">
+        Pick a role and a city. Every button opens a search straight into the places companies post first.
+      </p>
+      <LinkBuilder client:idle initialPlace={initialPlace} />
+    </section>
+
+    <section id="directory" class="scroll-mt-0 pt-16 md:pt-20" aria-labelledby="directory-h">
+      <p class="label">The list</p>
+      <h2 id="directory-h" class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{SOURCES.length} places to look</h2>
+      <p class="mt-2 mb-2 max-w-2xl text-fg-2">
+        Tick off what you've covered. Your checklist stays in this browser; filters live in the URL, so you can share a view.
+      </p>
+      <Directory client:load items={items} categories={CATEGORIES} initialCat={initialCat} initialTags={initialTags} newIds={newIds} />
+    </section>
+
+    <section id="tips" class="scroll-mt-6 pt-20 md:pt-24" aria-labelledby="tips-h">
+      <p class="label">Tips</p>
+      <h2 id="tips-h" class="mt-2 mb-6 text-2xl font-semibold tracking-tight md:text-3xl">What actually gets replies</h2>
+      <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          TIPS.map((t, i) => (
+            <li class="reveal rounded-xl border border-line bg-card p-5">
+              <span class="num text-xs text-fg-3">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-2 font-medium text-fg">{t.title}</h3>
+              <p class="mt-1.5 text-[13.5px] leading-relaxed text-fg-2">{t.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section id="templates" class="reveal scroll-mt-6 pt-16" aria-labelledby="templates-h">
+      <p class="label">Templates</p>
+      <h2 id="templates-h" class="mt-2 mb-6 text-2xl font-semibold tracking-tight md:text-3xl">Messages to send</h2>
+      <div class="grid gap-3 md:grid-cols-2">
+        <CopyTemplate client:idle title="Cold DM to a hiring manager" text={DM_TEMPLATE} />
+        <CopyTemplate client:idle title="Asking for a referral" text={REFERRAL_TEMPLATE} />
+      </div>
+    </section>
+
+    <section class="reveal pt-16" aria-labelledby="browse-h">
+      <p id="browse-h" class="label mb-4">Browse by</p>
+      <div class="grid gap-6 sm:grid-cols-2">
+        <div>
+          <p class="mb-2 text-sm font-medium text-fg">Category</p>
+          <ul class="flex flex-wrap gap-1.5">
+            {
+              CATEGORIES.map((c) => (
+                <li>
+                  <a href={`/c/${c.id}`} class="num inline-block rounded-md border border-line px-2 py-1 text-xs text-fg-2 hover:border-line-2 hover:text-fg">
+                    {c.short}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        <div>
+          <p class="mb-2 text-sm font-medium text-fg">City</p>
+          <ul class="flex flex-wrap gap-1.5">
+            {
+              CITY_PAGES.map((c) => (
+                <li>
+                  <a href={`/in/${c.slug}`} class="num inline-block rounded-md border border-line px-2 py-1 text-xs text-fg-2 hover:border-line-2 hover:text-fg">
+                    {c.name}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer class="mt-20 mb-10 flex flex-col gap-4 border-t border-line pt-8 text-sm text-fg-3 sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        Built by <a class="link" href="https://hardikk.dev">Hardikk Kamboj</a>. Missing a source?
+        <a class="link" href={`${REPO}/issues/new?template=add-source.yml`} target="_blank" rel="noopener noreferrer">Suggest it</a>
+        or <a class="link" href={`${REPO}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">open a pull request</a>.
+      </p>
+      <p class="num text-xs">
+        No sign-up, no affiliate links ·
+        <a class="hover:text-fg" href="https://buymeacoffee.com/hardikk" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
+      </p>
+    </footer>
+  </main>
+</Base>

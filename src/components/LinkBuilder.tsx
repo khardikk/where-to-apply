@@ -69,9 +69,9 @@ function Quick({ label, options, value, onPick }: { label: string; options: stri
   );
 }
 
-export default function LinkBuilder() {
+export default function LinkBuilder({ initialPlace = 'Bengaluru' }: { initialPlace?: string }) {
   const [role, setRole] = useState('AI engineer');
-  const [place, setPlace] = useState('Bengaluru');
+  const [place, setPlace] = useState(initialPlace);
 
   const r = role.trim() || 'software engineer';
   const where = placeTerms(place);
