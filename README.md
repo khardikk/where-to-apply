@@ -11,10 +11,11 @@ This is one hand-checked list of them, plus the search tricks that find roles be
 
 - **141 sources in 11 categories:** Indian job boards, startup boards, VC portfolio job boards, AI and FDE roles,
   companies hiring in India, remote platforms, people and accounts on X, communities, and prep tools.
-- **Link builder:** type a role and a city, get ready-made searches on Ashby, Greenhouse, Lever, Workable, LinkedIn,
-  X, Naukri and Hacker News.
-- **Search, filters and a checklist:** tick off what you've covered (saved in your browser), and share a filtered view
-  by URL.
+- **Link builder:** pick or type a role and a city (or remote), get ready-made searches on Ashby, Greenhouse, Lever,
+  Workable, LinkedIn, X, Naukri and Hacker News.
+- **Search, filters and a checklist:** filter by category and tag with live counts, tick off what you've covered, and
+  see it all in a dated "My checked" list you can copy. Everything stays in your browser; filters live in the URL, so a
+  view can be shared.
 - **Tips and templates:** what gets replies, plus a cold DM and a referral ask you can copy.
 - **Every link is checked:** a script opens every URL and verifies every X account, and runs weekly in CI.
 
