@@ -3,7 +3,7 @@
 Every place worth checking for a software, AI engineer or FDE role in India or remote: job boards, VC portfolio
 boards, AI and FDE roles, companies, people and accounts on X, communities, tools, tips and message templates.
 
-Live at https://where-to-apply.vercel.app. Astro + React islands + Tailwind, static, deployed on Vercel.
+Live at https://apply.hardikk.dev. Astro + React islands + Tailwind, static, deployed on Vercel.
 
 ## Add or edit a source
 

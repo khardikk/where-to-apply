@@ -3,7 +3,7 @@ import { IconMoon, IconSun } from '@tabler/icons-react';
 
 type Theme = 'light' | 'dark';
 
-/** Same circular-reveal theme switch as hardikkkamboj.vercel.app. */
+/** Same circular-reveal theme switch as hardikk.dev. */
 export default function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>('dark');
   useEffect(() => setTheme(document.documentElement.classList.contains('dark') ? 'dark' : 'light'), []);
