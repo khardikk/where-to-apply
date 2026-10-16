@@ -151,7 +151,7 @@ export default function Directory({ items, categories }: { items: Item[]; catego
                 cat === c.id ? 'border-fg bg-fg text-bg' : 'border-line text-fg-2 hover:border-line-2 hover:text-fg',
               )}
             >
-              {c.title.replace(/ on X$/, '')} <span className="num opacity-60">{counts[c.id] ?? 0}</span>
+              {c.title.replace(/ on X$/, '')} <span className={cn("num", cat === c.id ? "opacity-70" : "text-fg-3")}>{counts[c.id] ?? 0}</span>
             </button>
           ))}
         </div>
