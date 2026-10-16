@@ -5,7 +5,7 @@ import { CATEGORIES, SOURCES, sourceId } from '../src/data/sources.ts';
 
 const TAGS = ['India', 'Remote', 'AI', 'Startups', 'FDE', 'Referrals', 'Events', 'Prep', 'Salary'];
 const CATEGORY_IDS = new Set(CATEGORIES.map((c) => c.id));
-const X_CATEGORIES = new Set(['people', 'orgs']);
+const X_CATEGORIES = new Set(['hiring', 'people', 'orgs']);
 const TRACKING = /[?&](utm_[a-z]+|ref|referral|aff|affiliate|fbclid|gclid)=/i;
 const logos = new Set(JSON.parse(readFileSync('src/data/logos.json', 'utf8')));
 
@@ -48,6 +48,8 @@ for (const [i, s] of SOURCES.entries()) {
 
   if (s.added !== undefined && (!/^\d{4}-\d{2}-\d{2}$/.test(s.added) || Number.isNaN(Date.parse(s.added))))
     err(`added "${s.added}" must be a date like 2026-11-02`);
+
+  if (s.category === 'hiring' && !s.company?.trim()) err('people in "Hiring on X" need a `company`');
 
   const id = sourceId(s);
   if (seenIds.has(id)) err(`same category and name as #${seenIds.get(id)}`);

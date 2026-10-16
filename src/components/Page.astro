@@ -46,7 +46,7 @@ const items = SOURCES.map((s) => ({ ...s, id: sourceId(s), hasLogo: have.has(sou
 const cutoff = Date.now() - NEW_FOR_DAYS * 86400000;
 const newIds = SOURCES.filter((s) => s.added && Date.parse(s.added) >= cutoff).map(sourceId);
 const checked = new Date(`${CHECKED_ON}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-const people = SOURCES.filter((s) => s.category === 'people' || s.category === 'orgs').length;
+const people = SOURCES.filter((s) => s.x).length;
 
 const byTag = (t: Tag) => SOURCES.filter((s) => s.tags.includes(t)).length;
 const byCat = (c: CategoryId) => SOURCES.filter((s) => s.category === c).length;
@@ -56,6 +56,7 @@ const presets = [
   { label: 'AI', count: byTag('AI'), tag: 'AI' },
   { label: 'FDE', count: byTag('FDE'), tag: 'FDE' },
   { label: 'VC boards', count: byCat('vc'), cat: 'vc' },
+  { label: 'Hiring on X', count: byCat('hiring'), cat: 'hiring' },
   { label: 'People on X', count: byCat('people'), cat: 'people' },
   { label: 'Communities', count: byCat('communities'), cat: 'communities' },
 ];

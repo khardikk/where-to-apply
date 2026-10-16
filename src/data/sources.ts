@@ -13,6 +13,7 @@ export type CategoryId =
   | 'fde'
   | 'companies'
   | 'remote'
+  | 'hiring'
   | 'people'
   | 'orgs'
   | 'communities'
@@ -26,6 +27,7 @@ export const CATEGORIES: { id: CategoryId; title: string; short: string; blurb: 
   { id: 'fde', short: 'FDE', title: 'Forward deployed engineer', blurb: 'Companies known for FDE roles. Also search Applied AI Engineer and AI Solutions Engineer.' },
   { id: 'companies', short: 'Companies', title: 'AI and product companies hiring in India', blurb: 'Go straight to the careers page. Filter by Bengaluru or India.' },
   { id: 'remote', short: 'Remote', title: 'Remote, India-friendly', blurb: 'Remote boards and platforms that place engineers from India.' },
+  { id: 'hiring', short: 'Hiring on X', title: 'Hiring on X: founders and team leads', blurb: 'People who hire for their own teams. Send a short DM with proof of work, not a resume dump.' },
   { id: 'people', short: 'People on X', title: 'People to follow on X', blurb: 'Founders, builders and educators worth following and learning from.' },
   { id: 'orgs', short: 'Accounts on X', title: 'Accounts to follow on X', blurb: 'Companies, funds and communities that post roles and events.' },
   { id: 'communities', short: 'Communities', title: 'Communities and events', blurb: 'Where referrals actually come from. Show up, ship, talk to people.' },
@@ -42,6 +44,8 @@ export type Source = {
   x?: string;
   /** Website whose icon stands in when an X avatar can't be fetched. */
   site?: string;
+  /** For people in "Hiring on X": the company they hire for. */
+  company?: string;
   /** Date it was added (YYYY-MM-DD). Shows a "New" badge for NEW_FOR_DAYS days. Leave out for the launch list. */
   added?: string;
 };
@@ -141,15 +145,26 @@ export const SOURCES: Source[] = [
   { category: 'remote', name: 'Working Nomads', url: 'https://www.workingnomads.com/jobs', tags: ['Remote'], note: 'Curated remote jobs by category.' },
   { category: 'remote', name: 'JustRemote', url: 'https://justremote.co', tags: ['Remote'], note: 'Remote jobs, including fully location-independent ones.' },
 
+  // Hiring on X: people who hire for their own teams. `company` is required.
+  { category: 'hiring', name: 'Aravind Srinivas', company: 'Perplexity', x: 'AravSrinivas', url: x('AravSrinivas'), tags: ['AI', 'Startups'], note: 'Co-founder and CEO of Perplexity.' },
+  { category: 'hiring', name: 'Paras Chopra', company: 'Lossfunk', x: 'paraschopra', url: x('paraschopra'), tags: ['AI', 'India'], note: 'Founder of Wingify; runs the Lossfunk AI lab.' },
+  { category: 'hiring', name: 'Kailash Nadh', company: 'Zerodha', x: 'nadh', url: x('nadh'), tags: ['India'], note: 'CTO of Zerodha; runs its small in-house tech team.' },
+  { category: 'hiring', name: 'Nithin Kamath', company: 'Zerodha', x: 'Nithin0dha', url: x('Nithin0dha'), tags: ['India'], note: 'Founder and CEO of Zerodha.' },
+  { category: 'hiring', name: 'Kunal Shah', company: 'CRED', x: 'kunalb11', url: x('kunalb11'), tags: ['India', 'Startups'], note: 'Founder and CEO of CRED.' },
+  { category: 'hiring', name: 'Harshil Mathur', company: 'Razorpay', x: 'harshilmathur', site: 'razorpay.com', url: x('harshilmathur'), tags: ['India'], note: 'Co-founder and CEO of Razorpay.', added: '2026-10-16' },
+  { category: 'hiring', name: 'Bhavish Aggarwal', company: 'Krutrim', x: 'bhash', site: 'olakrutrim.com', url: x('bhash'), tags: ['AI', 'India'], note: 'Founder of Ola and Krutrim, which builds Indian AI models.', added: '2026-10-16' },
+  { category: 'hiring', name: 'Prukalpa Sankar', company: 'Atlan', x: 'prukalpa', site: 'atlan.com', url: x('prukalpa'), tags: ['AI', 'India', 'Startups'], note: 'Co-founder of Atlan, the data and AI governance platform.', added: '2026-10-16' },
+  { category: 'hiring', name: 'Guillermo Rauch', company: 'Vercel', x: 'rauchg', site: 'vercel.com', url: x('rauchg'), tags: ['AI', 'Remote'], note: 'Founder and CEO of Vercel.', added: '2026-10-16' },
+  { category: 'hiring', name: 'Amjad Masad', company: 'Replit', x: 'amasad', site: 'replit.com', url: x('amasad'), tags: ['AI', 'Startups'], note: 'Founder and CEO of Replit.', added: '2026-10-16' },
+  { category: 'hiring', name: 'Harrison Chase', company: 'LangChain', x: 'hwchase17', site: 'langchain.com', url: x('hwchase17'), tags: ['AI', 'Startups'], note: 'Co-founder and CEO of LangChain.', added: '2026-10-16' },
+  { category: 'hiring', name: 'Jerry Liu', company: 'LlamaIndex', x: 'jerryjliu0', site: 'llamaindex.ai', url: x('jerryjliu0'), tags: ['AI', 'Startups'], note: 'Co-founder and CEO of LlamaIndex.', added: '2026-10-16' },
+  { category: 'hiring', name: 'Michael Truell', company: 'Cursor', x: 'mntruell', site: 'cursor.com', url: x('mntruell'), tags: ['AI', 'Startups'], note: 'Co-founder and CEO of Cursor (Anysphere).', added: '2026-10-16' },
+  { category: 'hiring', name: 'Aman Sanger', company: 'Cursor', x: 'amanrsanger', site: 'cursor.com', url: x('amanrsanger'), tags: ['AI', 'Startups'], note: 'Co-founder of Cursor (Anysphere).', added: '2026-10-16' },
+
   // People to follow on X
-  { category: 'people', name: 'Aravind Srinivas', x: 'AravSrinivas', url: x('AravSrinivas'), tags: ['AI'], note: 'Co-founder and CEO of Perplexity.' },
-  { category: 'people', name: 'Paras Chopra', x: 'paraschopra', url: x('paraschopra'), tags: ['AI', 'India'], note: 'Founder of Wingify; runs the Lossfunk AI lab.' },
   { category: 'people', name: 'Harkirat Singh', x: 'kirat_tw', url: x('kirat_tw'), tags: ['India'], note: 'Runs 100xDevs, a large Indian developer community.' },
   { category: 'people', name: 'Varun Mayya', x: 'VarunMayya', url: x('VarunMayya'), tags: ['AI', 'India'], note: 'Founder building with AI from Bengaluru.' },
   { category: 'people', name: 'Deedy Das', x: 'deedydas', url: x('deedydas'), tags: ['AI', 'India'], note: 'Investor at Menlo Ventures; posts on AI and India tech.' },
-  { category: 'people', name: 'Kailash Nadh', x: 'nadh', url: x('nadh'), tags: ['India'], note: 'CTO of Zerodha and a loud voice for FOSS.' },
-  { category: 'people', name: 'Nithin Kamath', x: 'Nithin0dha', url: x('Nithin0dha'), tags: ['India'], note: 'Founder and CEO of Zerodha.' },
-  { category: 'people', name: 'Kunal Shah', x: 'kunalb11', url: x('kunalb11'), tags: ['India'], note: 'Founder of CRED.' },
   { category: 'people', name: 'Tanay Pratap', x: 'tanaypratap', url: x('tanaypratap'), tags: ['India'], note: 'Mentor and educator for Indian developers.' },
   { category: 'people', name: 'Arpit Bhayani', x: 'arpit_bhayani', url: x('arpit_bhayani'), tags: ['India', 'Prep'], note: 'Engineering educator; systems deep dives.' },
   { category: 'people', name: 'Gaurav Sen', x: 'gkcs_', url: x('gkcs_'), tags: ['India', 'Prep'], note: 'System design educator, InterviewReady.' },

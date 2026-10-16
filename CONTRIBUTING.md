@@ -21,7 +21,7 @@ A source belongs here if all of these are true:
 3. **It's active.** Posts, roles or events in the last few months.
 4. **It's the real, clean link.** No affiliate, referral or tracking links (`?ref=`, `utm_`, and so on).
 5. **For people on X:** they're a public figure, founder, builder or educator who posts publicly about their work or
-   hiring. No private individuals, and no personal contact details beyond the public profile link.
+   hiring. For **Hiring on X**, they hire for their own company (founders, team leads, in-house recruiters), not an agency. No private individuals, and no personal contact details beyond the public profile link.
 
 We'll usually say no to: generic content farms, scraped job aggregators with no added value, paid courses dressed up as
 job boards, and duplicates of something already listed.
@@ -49,6 +49,7 @@ A person or account on X uses the `x()` helper:
 | `tags`     | Any of `India`, `Remote`, `AI`, `Startups`, `FDE`, `Referrals`, `Events`, `Prep`, `Salary`. Only tags that are clearly true |
 | `note`     | One line, 90 characters max. Say why it's useful, plainly. No hype words, no emoji, no dashes             |
 | `x`        | People and accounts on X only: the handle without `@`                                                     |
+| `company`  | "Hiring on X" only: the company they hire for. Link one of their hiring posts in the PR so it can be checked |
 | `site`     | Optional. A website whose icon stands in if the logo or avatar can't be fetched                           |
 | `added`    | Today's date (`2026-11-02`). New sources get a "New" badge for 21 days                                     |
 

@@ -139,7 +139,7 @@ export default function Directory({
     return items.filter(
       (s) =>
         (!hideDone || !done.has(s.id)) &&
-        (!needle || `${s.name} ${s.note} ${s.x ?? ''} ${host(s.url)} ${s.tags.join(' ')}`.toLowerCase().includes(needle)),
+        (!needle || `${s.name} ${s.note} ${s.x ?? ''} ${s.company ?? ''} ${host(s.url)} ${s.tags.join(' ')}`.toLowerCase().includes(needle)),
     );
   }, [items, query, hideDone, done]);
 
@@ -470,7 +470,10 @@ export default function Directory({
                             </span>
                           )}
                         </h3>
-                        <p className="num truncate text-[11.5px] text-fg-3">{s.x ? `@${s.x}` : host(s.url)}</p>
+                        <p className="num truncate text-[11.5px] text-fg-3">
+                          {s.x ? `@${s.x}` : host(s.url)}
+                          {s.company && <span className="ml-1.5 rounded border border-line px-1 text-fg-2">{s.company}</span>}
+                        </p>
                       </div>
                       <button
                         type="button"
