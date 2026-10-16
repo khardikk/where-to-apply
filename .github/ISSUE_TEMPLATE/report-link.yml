@@ -1,0 +1,29 @@
+name: Report a link
+description: A source is dead, moved, wrong, or no longer worth listing.
+title: "Link: "
+labels: ["link"]
+body:
+  - type: input
+    id: source
+    attributes:
+      label: Which source?
+      placeholder: Name as it appears on the site
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What's wrong?
+      options:
+        - The link is dead or redirects somewhere else
+        - The description is wrong or out of date
+        - It's no longer active
+        - It shouldn't be listed (spam, scam, paid-only)
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: The new link if it moved, or what you saw.

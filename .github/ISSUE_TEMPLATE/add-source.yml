@@ -1,0 +1,58 @@
+name: Add a source
+description: Suggest a job board, company, community, person or tool for the list.
+title: "Add: "
+labels: ["new source"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks! Check [what gets in](https://github.com/khardikk/where-to-apply/blob/main/CONTRIBUTING.md#what-gets-in) first, and search the site to make sure it isn't listed already.
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      placeholder: Example Jobs
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Link
+      description: The most useful page for a job seeker, without tracking or referral parameters. For a person on X, their profile link.
+      placeholder: https://example.com/jobs
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Job boards in India
+        - Startup jobs
+        - VC portfolio job boards
+        - AI and LLM job boards
+        - Forward deployed engineer
+        - AI and product companies hiring in India
+        - Remote, India-friendly
+        - People to follow on X
+        - Accounts to follow on X
+        - Communities and events
+        - Apps and prep
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why is it worth someone's time?
+      description: One or two lines. What makes it different from what's already listed?
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: It's free to use and active in the last few months.
+          required: true
+        - label: It isn't an affiliate or referral link, and I'm not paid to promote it.
+          required: true
+        - label: I work at, own or am affiliated with this (tick only if true, so we know).

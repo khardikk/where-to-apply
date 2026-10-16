@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { IconBrandGithub } from '@tabler/icons-react';
 import Base from '../layouts/Base.astro';
 import CopyTemplate from '../components/CopyTemplate';
 import Directory from '../components/Directory';
@@ -12,6 +13,7 @@ import avatar from '../assets/avatar.jpg';
 import logos from '../data/logos.json';
 import { CATEGORIES, CHECKED_ON, DM_TEMPLATE, REFERRAL_TEMPLATE, SOURCES, TIPS, sourceId } from '../data/sources';
 
+const REPO = 'https://github.com/khardikk/where-to-apply';
 const have = new Set(logos);
 const items = SOURCES.map((s) => ({ ...s, id: sourceId(s), hasLogo: have.has(sourceId(s)) }));
 const checked = new Date(`${CHECKED_ON}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
@@ -36,6 +38,15 @@ const description = `${SOURCES.length} hand-checked places to find software, AI 
       >
         <Image src={avatar} alt="" width={48} height={48} class="size-6 rounded-full" loading="eager" />
         Made by Hardikk Kamboj
+      </a>
+      <a
+        href={REPO}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="ml-2 inline-flex items-center gap-1.5 rounded-full border border-line bg-card/60 px-3 py-1 text-xs text-fg-2 backdrop-blur transition-colors hover:border-line-2 hover:text-fg"
+      >
+        <IconBrandGithub className="size-3.5" stroke={1.8} />
+        Contribute
       </a>
 
       <h1 class="mt-7 max-w-3xl text-[2.75rem] leading-[1.02] font-semibold tracking-[-0.04em] md:text-7xl">
@@ -113,7 +124,8 @@ const description = `${SOURCES.length} hand-checked places to find software, AI 
     <footer class="mt-24 mb-10 flex flex-col gap-4 border-t border-line pt-8 text-sm text-fg-3 sm:flex-row sm:items-center sm:justify-between">
       <p>
         Built by <a class="link" href="https://hardikk.dev">Hardikk Kamboj</a>. Missing a source?
-        <a class="link" href="https://x.com/HdKamboj" target="_blank" rel="noopener noreferrer">Tell me on X</a>.
+        <a class="link" href={`${REPO}/issues/new?template=add-source.yml`} target="_blank" rel="noopener noreferrer">Suggest it</a>
+        or <a class="link" href={`${REPO}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener noreferrer">open a pull request</a>.
       </p>
       <p class="num text-xs">
         No sign-up, no affiliate links ·

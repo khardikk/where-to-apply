@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "check-links": "node scripts/check-links.mjs",
     "icons": "node scripts/icons.mjs",
-    "logos": "node scripts/logos.mjs"
+    "logos": "node scripts/logos.mjs",
+    "validate": "node scripts/validate.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^7.1.0",
@@ -37,5 +38,12 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "satori": "^0.62.0"
-  }
+  },
+  "description": "Every place worth checking for a software, AI engineer or FDE job in India or remote.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/khardikk/where-to-apply"
+  },
+  "homepage": "https://apply.hardikk.dev"
 }
