@@ -2,6 +2,8 @@
 import '@fontsource-variable/geist';
 import '@fontsource-variable/geist-mono';
 import '../styles/global.css';
+import VercelAnalytics from '@vercel/analytics/astro';
+import PostHog from '../components/PostHog.astro';
 import geistSans from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
 
 interface Props {
@@ -58,8 +60,10 @@ const jsonLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={image} />
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <PostHog />
   </head>
   <body class="min-h-dvh">
     <slot />
+    <VercelAnalytics />
   </body>
 </html>
