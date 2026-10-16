@@ -15,14 +15,14 @@
   ],
   "redirects": [
     {
-      "source": "/:path*",
+      "source": "/(.*)",
       "has": [
         {
           "type": "host",
           "value": "where-to-apply.vercel.app"
         }
       ],
-      "destination": "https://apply.hardikk.dev/:path*",
+      "destination": "https://apply.hardikk.dev/$1",
       "permanent": true
     }
   ]
