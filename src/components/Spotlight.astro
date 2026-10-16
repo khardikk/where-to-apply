@@ -1,0 +1,126 @@
+---
+// Aceternity "Spotlight New" (ui.aceternity.com/components/spotlight-new), ported from
+// motion/react to CSS keyframes so the hero needs no JavaScript. Same gradients and timing.
+---
+
+<div class="spotlight" aria-hidden="true">
+  <div class="side left">
+    <div class="beam a"></div>
+    <div class="beam b"></div>
+    <div class="beam c"></div>
+  </div>
+  <div class="side right">
+    <div class="beam a"></div>
+    <div class="beam b"></div>
+    <div class="beam c"></div>
+  </div>
+</div>
+
+<style>
+  .spotlight {
+    --g1: radial-gradient(68.54% 68.72% at 55.02% 31.46%, hsla(210, 100%, 85%, 0.08) 0, hsla(210, 100%, 55%, 0.02) 50%, hsla(210, 100%, 45%, 0) 80%);
+    --g2: radial-gradient(50% 50% at 50% 50%, hsla(210, 100%, 85%, 0.06) 0, hsla(210, 100%, 55%, 0.02) 80%, transparent 100%);
+    --g3: radial-gradient(50% 50% at 50% 50%, hsla(210, 100%, 85%, 0.04) 0, hsla(210, 100%, 45%, 0.02) 80%, transparent 100%);
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    animation: fade-in 1.5s ease both;
+  }
+
+  :global(html:not(.dark)) .spotlight {
+    --g1: radial-gradient(68.54% 68.72% at 55.02% 31.46%, hsla(210, 60%, 40%, 0.07) 0, hsla(210, 60%, 40%, 0.02) 50%, transparent 80%);
+    --g2: radial-gradient(50% 50% at 50% 50%, hsla(210, 60%, 40%, 0.05) 0, hsla(210, 60%, 40%, 0.015) 80%, transparent 100%);
+    --g3: radial-gradient(50% 50% at 50% 50%, hsla(210, 60%, 40%, 0.035) 0, hsla(210, 60%, 40%, 0.01) 80%, transparent 100%);
+  }
+
+  .side {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    animation: sway 7s ease-in-out infinite alternate;
+  }
+
+  .left {
+    left: 0;
+    --dir: 1;
+  }
+
+  .right {
+    right: 0;
+    --dir: -1;
+  }
+
+  .beam {
+    position: absolute;
+    top: 0;
+    height: 1380px;
+  }
+
+  .left .beam {
+    left: 0;
+  }
+
+  .right .beam {
+    right: 0;
+  }
+
+  .a {
+    width: 560px;
+    background: var(--g1);
+  }
+
+  .left .a {
+    transform: translateY(-350px) rotate(-45deg);
+  }
+
+  .right .a {
+    transform: translateY(-350px) rotate(45deg);
+  }
+
+  .b,
+  .c {
+    width: 240px;
+  }
+
+  .b {
+    background: var(--g2);
+  }
+
+  .c {
+    background: var(--g3);
+  }
+
+  .left .b {
+    transform-origin: top left;
+    transform: rotate(-45deg) translate(5%, -50%);
+  }
+
+  .left .c {
+    transform-origin: top left;
+    transform: rotate(-45deg) translate(-180%, -70%);
+  }
+
+  .right .b {
+    transform-origin: top right;
+    transform: rotate(45deg) translate(-5%, -50%);
+  }
+
+  .right .c {
+    transform-origin: top right;
+    transform: rotate(45deg) translate(180%, -70%);
+  }
+
+  @keyframes sway {
+    to {
+      transform: translateX(calc(var(--dir) * 100px));
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+</style>

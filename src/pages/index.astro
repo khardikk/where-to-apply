@@ -1,0 +1,122 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import CopyTemplate from '../components/CopyTemplate';
+import Directory from '../components/Directory';
+import GridBackground from '../components/GridBackground.astro';
+import LinkBuilder from '../components/LinkBuilder';
+import Spotlight from '../components/Spotlight.astro';
+import ThemeToggle from '../components/ThemeToggle';
+import avatar from '../assets/avatar.jpg';
+import logos from '../data/logos.json';
+import { CATEGORIES, CHECKED_ON, DM_TEMPLATE, REFERRAL_TEMPLATE, SOURCES, TIPS, sourceId } from '../data/sources';
+
+const have = new Set(logos);
+const items = SOURCES.map((s) => ({ ...s, id: sourceId(s), hasLogo: have.has(sourceId(s)) }));
+const checked = new Date(`${CHECKED_ON}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const people = SOURCES.filter((s) => s.category === 'people' || s.category === 'orgs').length;
+
+const title = 'Where to Apply · Every place to find a tech or AI job in India and remote';
+const description = `${SOURCES.length} hand-checked places to find software, AI engineer and FDE roles in India and remote: job boards, VC portfolio boards, communities, people on X, and search tricks that find roles first.`;
+---
+
+<Base title={title} description={description}>
+  <div class="fixed right-4 bottom-4 z-50">
+    <ThemeToggle client:idle />
+  </div>
+
+  <header class="relative overflow-hidden border-b border-line">
+    <GridBackground />
+    <Spotlight />
+    <div class="wrap relative pt-20 pb-16 md:pt-32 md:pb-24">
+      <a
+        href="https://hardikkkamboj.vercel.app"
+        class="inline-flex items-center gap-2 rounded-full border border-line bg-card/60 py-1 pr-3 pl-1 text-xs text-fg-2 backdrop-blur transition-colors hover:text-fg"
+      >
+        <Image src={avatar} alt="" width={48} height={48} class="size-6 rounded-full" loading="eager" />
+        Made by Hardikk Kamboj
+      </a>
+
+      <h1 class="mt-7 max-w-3xl text-[2.75rem] leading-[1.02] font-semibold tracking-[-0.04em] md:text-7xl">
+        Where to apply.
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg text-fg-2 md:text-xl">
+        Every place worth checking for a software, AI engineer or FDE role in India or remote. Boards, VC portfolio lists,
+        communities, people on X, and the search tricks that find roles before LinkedIn does.
+      </p>
+
+      <dl class="num mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+        <div><dt class="sr-only">Sources</dt><dd><b class="text-fg text-2xl font-medium">{SOURCES.length}</b> <span class="text-fg-3">sources</span></dd></div>
+        <div><dt class="sr-only">Categories</dt><dd><b class="text-fg text-2xl font-medium">{CATEGORIES.length}</b> <span class="text-fg-3">categories</span></dd></div>
+        <div><dt class="sr-only">People and accounts</dt><dd><b class="text-fg text-2xl font-medium">{people}</b> <span class="text-fg-3">people and accounts on X</span></dd></div>
+        <div><dt class="sr-only">Checked</dt><dd><span class="text-fg-3">every link checked</span> <b class="text-fg font-medium">{checked}</b></dd></div>
+      </dl>
+
+      <div class="mt-9 flex flex-wrap items-center gap-3">
+        <a href="#directory" class="inline-flex h-11 items-center gap-2 rounded-full bg-fg px-5 text-sm font-medium text-bg transition-opacity hover:opacity-85">
+          Browse the list <span aria-hidden="true">↓</span>
+        </a>
+        <a href="#search" class="inline-flex h-11 items-center rounded-full border border-line-2 bg-card/50 px-5 text-sm font-medium text-fg backdrop-blur transition-colors hover:bg-hover">
+          Find roles first
+        </a>
+        <a href="#tips" class="inline-flex h-11 items-center px-2 text-sm font-medium text-fg-2 transition-colors hover:text-fg">Tips and templates</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section id="search" class="reveal scroll-mt-6 pt-16 md:pt-20" aria-labelledby="search-h">
+      <p class="label">Link builder</p>
+      <h2 id="search-h" class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">Find roles before they hit LinkedIn</h2>
+      <p class="mt-2 mb-6 max-w-2xl text-fg-2">
+        Type a role and a city. Every button opens a search straight into the places companies post first.
+      </p>
+      <LinkBuilder client:visible />
+    </section>
+
+    <section id="directory" class="scroll-mt-0 pt-16 md:pt-20" aria-labelledby="directory-h">
+      <p class="label">The list</p>
+      <h2 id="directory-h" class="mt-2 text-2xl font-semibold tracking-tight md:text-3xl">{SOURCES.length} places to look</h2>
+      <p class="mt-2 mb-2 max-w-2xl text-fg-2">
+        Tick off what you've covered. Your checklist stays in this browser; filters live in the URL, so you can share a view.
+      </p>
+      <Directory client:load items={items} categories={CATEGORIES} />
+    </section>
+
+    <section id="tips" class="scroll-mt-6 pt-20 md:pt-24" aria-labelledby="tips-h">
+      <p class="label">Tips</p>
+      <h2 id="tips-h" class="mt-2 mb-6 text-2xl font-semibold tracking-tight md:text-3xl">What actually gets replies</h2>
+      <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          TIPS.map((t, i) => (
+            <li class="reveal rounded-xl border border-line bg-card p-5">
+              <span class="num text-xs text-fg-3">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-2 font-medium text-fg">{t.title}</h3>
+              <p class="mt-1.5 text-[13.5px] leading-relaxed text-fg-2">{t.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section id="templates" class="reveal pt-16" aria-labelledby="templates-h">
+      <p class="label">Templates</p>
+      <h2 id="templates-h" class="mt-2 mb-6 text-2xl font-semibold tracking-tight md:text-3xl">Messages to send</h2>
+      <div class="grid gap-3 md:grid-cols-2">
+        <CopyTemplate client:visible title="Cold DM to a hiring manager" text={DM_TEMPLATE} />
+        <CopyTemplate client:visible title="Asking for a referral" text={REFERRAL_TEMPLATE} />
+      </div>
+    </section>
+
+    <footer class="mt-24 mb-10 flex flex-col gap-4 border-t border-line pt-8 text-sm text-fg-3 sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        Built by <a class="link" href="https://hardikkkamboj.vercel.app">Hardikk Kamboj</a>. Missing a source?
+        <a class="link" href="https://x.com/HdKamboj" target="_blank" rel="noopener noreferrer">Tell me on X</a>.
+      </p>
+      <p class="num text-xs">
+        No sign-up, no affiliate links ·
+        <a class="hover:text-fg" href="https://buymeacoffee.com/hardikk" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
+      </p>
+    </footer>
+  </main>
+</Base>

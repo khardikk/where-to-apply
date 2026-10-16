@@ -1,0 +1,80 @@
+---
+// Aceternity "Grid and Dot Backgrounds" (ui.aceternity.com/components/grid-and-dot-backgrounds),
+// plus a brighter copy of the grid that follows the pointer. Place inside a `relative` parent.
+interface Props {
+  size?: number;
+  class?: string;
+}
+
+const { size = 40, class: className } = Astro.props;
+---
+
+<div class:list={['grid-bg', className]} style={`--size: ${size}px`} aria-hidden="true">
+  <div class="layer base"></div>
+  <div class="fade"></div>
+  <div class="layer hot"></div>
+</div>
+
+<style>
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .layer {
+    position: absolute;
+    inset: 0;
+    background-size: var(--size) var(--size);
+    background-position: center top;
+    background-image:
+      linear-gradient(to right, var(--c) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--c) 1px, transparent 1px);
+  }
+
+  .base {
+    --c: var(--grid);
+  }
+
+  .fade {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 35%, transparent 15%, black 80%);
+  }
+
+  .hot {
+    --c: var(--grid-hot);
+    opacity: 0;
+    transition: opacity 400ms ease;
+    mask-image: radial-gradient(240px circle at var(--mx, -999px) var(--my, -999px), black, transparent 75%);
+  }
+
+  .grid-bg[data-active] .hot {
+    opacity: 1;
+  }
+
+  @media (hover: none) {
+    .hot {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  for (const grid of document.querySelectorAll<HTMLElement>('.grid-bg')) {
+    const host = grid.parentElement!;
+    host.addEventListener(
+      'pointermove',
+      (e) => {
+        const r = grid.getBoundingClientRect();
+        grid.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        grid.style.setProperty('--my', `${e.clientY - r.top}px`);
+        grid.dataset.active = '';
+      },
+      { passive: true },
+    );
+    host.addEventListener('pointerleave', () => delete grid.dataset.active);
+  }
+</script>
