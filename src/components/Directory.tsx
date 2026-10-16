@@ -3,7 +3,7 @@ import { IconCheck, IconSearch, IconX } from '@tabler/icons-react';
 import type { CategoryId, Source, Tag } from '../data/sources';
 import { cn } from '@/lib/utils';
 
-type Category = { id: CategoryId; title: string; blurb: string };
+type Category = { id: CategoryId; title: string; short: string; blurb: string };
 type Item = Source & { id: string; hasLogo: boolean };
 
 const TAGS: Tag[] = ['India', 'Remote', 'AI', 'Startups', 'FDE', 'Referrals', 'Events', 'Prep', 'Salary'];
@@ -82,22 +82,54 @@ export default function Directory({ items, categories }: { items: Item[]; catego
 
   const toggleTag = (t: Tag) => setTags((prev) => (prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t]));
 
-  const counts = useMemo(() => {
-    const m: Record<string, number> = { all: items.length };
-    for (const s of items) m[s.category] = (m[s.category] ?? 0) + 1;
-    return m;
-  }, [items]);
-
-  const filtered = useMemo(() => {
+  // Everything except the category and tag choices: search text and "Hide checked".
+  const base = useMemo(() => {
     const needle = query.trim().toLowerCase();
     return items.filter(
       (s) =>
-        (cat === 'all' || s.category === cat) &&
-        tags.every((t) => s.tags.includes(t)) &&
         (!hideDone || !done.has(s.id)) &&
         (!needle || `${s.name} ${s.note} ${s.x ?? ''} ${host(s.url)} ${s.tags.join(' ')}`.toLowerCase().includes(needle)),
     );
-  }, [items, query, cat, tags, hideDone, done]);
+  }, [items, query, hideDone, done]);
+
+  const hasTags = (s: Item, ts: Tag[]) => ts.every((t) => s.tags.includes(t));
+
+  // Chip counts answer "how many would I see if I picked this?", given every other active filter.
+  const catCounts = useMemo(() => {
+    const m: Record<string, number> = { all: 0 };
+    for (const s of base) {
+      if (!hasTags(s, tags)) continue;
+      m.all++;
+      m[s.category] = (m[s.category] ?? 0) + 1;
+    }
+    return m;
+  }, [base, tags]);
+
+  const tagCounts = useMemo(() => {
+    const m: Record<string, number> = {};
+    for (const t of TAGS) {
+      const want = tags.includes(t) ? tags : [...tags, t];
+      m[t] = base.filter((s) => (cat === 'all' || s.category === cat) && hasTags(s, want)).length;
+    }
+    return m;
+  }, [base, cat, tags]);
+
+  const filtered = useMemo(
+    () => base.filter((s) => (cat === 'all' || s.category === cat) && hasTags(s, tags)),
+    [base, cat, tags],
+  );
+
+  // When a filter changes while the list is scrolled past, jump back to the top of the results.
+  const wrap = useRef<HTMLDivElement>(null);
+  const firstRun = useRef(true);
+  useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    const el = wrap.current;
+    if (el && el.getBoundingClientRect().top < 0) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 8 });
+  }, [cat, tags, hideDone]);
 
   const groups = categories.map((c) => ({ ...c, items: filtered.filter((s) => s.category === c.id) })).filter((g) => g.items.length);
   const filtering = query || cat !== 'all' || tags.length > 0 || hideDone;
@@ -111,7 +143,7 @@ export default function Directory({ items, categories }: { items: Item[]; catego
   };
 
   return (
-    <div>
+    <div ref={wrap}>
       <div className="sticky top-0 z-30 -mx-5 border-b border-line bg-bg/85 px-5 pt-4 pb-3 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <label className="relative flex h-11 flex-1 items-center rounded-xl border border-line bg-card px-3.5 transition-colors focus-within:border-line-2">
@@ -139,40 +171,52 @@ export default function Directory({ items, categories }: { items: Item[]; catego
           </div>
         </div>
 
-        <div className="mt-3 -mx-5 flex gap-1.5 overflow-x-auto px-5 pb-1 [scrollbar-width:none]">
-          {[{ id: 'all' as const, title: 'All' }, ...categories].map((c) => (
-            <button
-              key={c.id}
-              type="button"
-              onClick={() => setCat(c.id)}
-              aria-pressed={cat === c.id}
-              className={cn(
-                'shrink-0 rounded-full border px-3 py-1 text-[13px] whitespace-nowrap transition-colors',
-                cat === c.id ? 'border-fg bg-fg text-bg' : 'border-line text-fg-2 hover:border-line-2 hover:text-fg',
-              )}
-            >
-              {c.title.replace(/ on X$/, '')} <span className={cn("num", cat === c.id ? "opacity-70" : "text-fg-3")}>{counts[c.id] ?? 0}</span>
-            </button>
-          ))}
+        <div className="mt-3 -mx-5 flex gap-1.5 overflow-x-auto px-5 pb-1 [mask-image:linear-gradient(to_right,black_85%,transparent)] [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:[mask-image:none]">
+          {[{ id: 'all' as const, short: 'All', title: 'All sources' }, ...categories].map((c) => {
+            const on = cat === c.id;
+            const n = catCounts[c.id] ?? 0;
+            return (
+              <button
+                key={c.id}
+                type="button"
+                title={c.title}
+                onClick={() => setCat(on && c.id !== 'all' ? 'all' : c.id)}
+                aria-pressed={on}
+                disabled={!on && n === 0}
+                className={cn(
+                  'shrink-0 rounded-full border px-3 py-1 text-[13px] whitespace-nowrap transition-colors disabled:cursor-not-allowed disabled:opacity-35',
+                  on ? 'border-fg bg-fg text-bg' : 'border-line text-fg-2 enabled:hover:border-line-2 enabled:hover:text-fg',
+                )}
+              >
+                {c.short} <span className={cn('num', on ? 'opacity-70' : 'text-fg-3')}>{n}</span>
+                {on && c.id !== 'all' && <IconX className="-mr-1 ml-1 inline size-3 align-[-1px] opacity-70" aria-hidden="true" />}
+              </button>
+            );
+          })}
         </div>
 
         <div className="mt-2 -mx-5 flex items-center gap-1.5 overflow-x-auto px-5 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0">
-          {TAGS.map((t) => (
-            <button
-              key={t}
-              type="button"
-              onClick={() => toggleTag(t)}
-              aria-pressed={tags.includes(t)}
-              className={cn(
-                'num shrink-0 rounded-md border px-2 py-0.5 text-[11.5px] transition-colors',
-                tags.includes(t)
-                  ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_14%,transparent)] text-fg'
-                  : 'border-line text-fg-3 hover:text-fg',
-              )}
-            >
-              {t}
-            </button>
-          ))}
+          {TAGS.map((t) => {
+            const on = tags.includes(t);
+            const n = tagCounts[t] ?? 0;
+            return (
+              <button
+                key={t}
+                type="button"
+                onClick={() => toggleTag(t)}
+                aria-pressed={on}
+                disabled={!on && n === 0}
+                className={cn(
+                  'num shrink-0 rounded-md border px-2 py-0.5 text-[11.5px] transition-colors disabled:cursor-not-allowed disabled:opacity-35',
+                  on
+                    ? 'border-[var(--accent)] bg-[color-mix(in_srgb,var(--accent)_14%,transparent)] text-fg'
+                    : 'border-line text-fg-3 enabled:hover:text-fg',
+                )}
+              >
+                {t} <span className="opacity-60">{n}</span>
+              </button>
+            );
+          })}
           <button
             type="button"
             onClick={() => setHideDone((v) => !v)}
@@ -191,6 +235,12 @@ export default function Directory({ items, categories }: { items: Item[]; catego
           )}
         </div>
       </div>
+
+      {filtering && groups.length > 0 && (
+        <p className="num pt-4 text-xs text-fg-3" aria-live="polite">
+          Showing <span className="text-fg">{filtered.length}</span> of {items.length}
+        </p>
+      )}
 
       {groups.length === 0 ? (
         <div className="py-24 text-center">

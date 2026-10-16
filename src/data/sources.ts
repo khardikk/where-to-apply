@@ -18,18 +18,18 @@ export type CategoryId =
   | 'communities'
   | 'tools';
 
-export const CATEGORIES: { id: CategoryId; title: string; blurb: string }[] = [
-  { id: 'boards', title: 'Job boards in India', blurb: 'Where most Indian tech roles are posted first.' },
-  { id: 'startups', title: 'Startup jobs', blurb: 'Smaller teams, faster loops, founders read applications.' },
-  { id: 'vc', title: 'VC portfolio job boards', blurb: 'One search across hundreds of funded startups. Underused.' },
-  { id: 'ai', title: 'AI and LLM job boards', blurb: 'Boards that only list AI, agent and LLM roles.' },
-  { id: 'fde', title: 'Forward deployed engineer', blurb: 'Companies known for FDE roles. Also search the other titles below.' },
-  { id: 'companies', title: 'AI and product companies hiring in India', blurb: 'Go straight to the careers page. Filter by Bengaluru or India.' },
-  { id: 'remote', title: 'Remote, India-friendly', blurb: 'Remote boards and platforms that place engineers from India.' },
-  { id: 'people', title: 'People to follow on X', blurb: 'Founders, builders and educators worth following and learning from.' },
-  { id: 'orgs', title: 'Accounts to follow on X', blurb: 'Companies, funds and communities that post roles and events.' },
-  { id: 'communities', title: 'Communities and events', blurb: 'Where referrals actually come from. Show up, ship, talk to people.' },
-  { id: 'tools', title: 'Apps and prep', blurb: 'Track applications, check pay, prepare for interviews.' },
+export const CATEGORIES: { id: CategoryId; title: string; short: string; blurb: string }[] = [
+  { id: 'boards', short: 'India boards', title: 'Job boards in India', blurb: 'Where most Indian tech roles are posted first.' },
+  { id: 'startups', short: 'Startups', title: 'Startup jobs', blurb: 'Smaller teams, faster loops, founders read applications.' },
+  { id: 'vc', short: 'VC boards', title: 'VC portfolio job boards', blurb: 'One search across hundreds of funded startups. Underused.' },
+  { id: 'ai', short: 'AI boards', title: 'AI and LLM job boards', blurb: 'Boards that only list AI, agent and LLM roles.' },
+  { id: 'fde', short: 'FDE', title: 'Forward deployed engineer', blurb: 'Companies known for FDE roles. Also search Applied AI Engineer and AI Solutions Engineer.' },
+  { id: 'companies', short: 'Companies', title: 'AI and product companies hiring in India', blurb: 'Go straight to the careers page. Filter by Bengaluru or India.' },
+  { id: 'remote', short: 'Remote', title: 'Remote, India-friendly', blurb: 'Remote boards and platforms that place engineers from India.' },
+  { id: 'people', short: 'People on X', title: 'People to follow on X', blurb: 'Founders, builders and educators worth following and learning from.' },
+  { id: 'orgs', short: 'Accounts on X', title: 'Accounts to follow on X', blurb: 'Companies, funds and communities that post roles and events.' },
+  { id: 'communities', short: 'Communities', title: 'Communities and events', blurb: 'Where referrals actually come from. Show up, ship, talk to people.' },
+  { id: 'tools', short: 'Apps and prep', title: 'Apps and prep', blurb: 'Track applications, check pay, prepare for interviews.' },
 ];
 
 export type Source = {
