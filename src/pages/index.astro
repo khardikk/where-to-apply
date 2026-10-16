@@ -7,6 +7,7 @@ import GridBackground from '../components/GridBackground.astro';
 import LinkBuilder from '../components/LinkBuilder';
 import Spotlight from '../components/Spotlight.astro';
 import ThemeToggle from '../components/ThemeToggle';
+import Tour from '../components/Tour';
 import avatar from '../assets/avatar.jpg';
 import logos from '../data/logos.json';
 import { CATEGORIES, CHECKED_ON, DM_TEMPLATE, REFERRAL_TEMPLATE, SOURCES, TIPS, sourceId } from '../data/sources';
@@ -60,6 +61,7 @@ const description = `${SOURCES.length} hand-checked places to find software, AI 
           Find roles first
         </a>
         <a href="#tips" class="inline-flex h-11 items-center px-2 text-sm font-medium text-fg-2 transition-colors hover:text-fg">Tips and templates</a>
+        <Tour client:load />
       </div>
     </div>
   </header>
