@@ -11,6 +11,7 @@ For a broad directory search, fetch `https://apply.hardikk.dev/` with `Accept: t
 ## Pages
 
 - [Homepage and full directory](https://apply.hardikk.dev/)
+- [How to use the directory](https://apply.hardikk.dev/guide)
 - [About](https://apply.hardikk.dev/about)
 - [Contact](https://apply.hardikk.dev/contact)
 - [Privacy](https://apply.hardikk.dev/privacy)

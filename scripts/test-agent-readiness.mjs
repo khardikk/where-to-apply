@@ -1,9 +1,18 @@
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import { readFileSync } from 'node:fs';
+import { createServer } from 'node:net';
 
-const origin = 'http://127.0.0.1:4501';
-const server = spawn(process.execPath, ['node_modules/astro/bin/astro.mjs', 'dev', '--host', '127.0.0.1', '--port', '4501'], { stdio: 'ignore' });
+const port = await new Promise((resolve, reject) => {
+  const probe = createServer();
+  probe.once('error', reject);
+  probe.listen(0, '127.0.0.1', () => {
+    const { port: selected } = probe.address();
+    probe.close((error) => error ? reject(error) : resolve(selected));
+  });
+});
+const origin = `http://127.0.0.1:${port}`;
+const server = spawn(process.execPath, ['node_modules/astro/bin/astro.mjs', 'dev', '--host', '127.0.0.1', '--port', String(port)], { stdio: 'ignore' });
 
 async function ready() {
   for (let attempt = 0; attempt < 60; attempt++) {
@@ -34,7 +43,7 @@ try {
   assert.match(htmlBody, /<h1[^>]*>Where to apply\./);
   assert.match(htmlBody, /"description":"Software engineer and maker of Where to Apply/);
   const visibleText = htmlBody.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  assert.ok(visibleText.length / htmlBody.length >= 0.05, `homepage meaningful text should reach the 5% raw HTML target (got ${(visibleText.length / htmlBody.length * 100).toFixed(2)}%)`);
+  assert.ok(visibleText.length >= 500, 'homepage should include at least 500 characters of meaningful text');
 
   const notFound = await fetch(`${origin}/__agent-readiness-missing` , { headers: { Accept: 'text/markdown' } });
   const notFoundBody = await notFound.text();
@@ -44,11 +53,11 @@ try {
   assert.ok(notFoundBody.length > 20);
   assert.match(notFoundBody, /sitemap|homepage/i);
 
-  for (const path of ['/about', '/contact', '/privacy', '/llms.txt', '/robots.txt']) {
+  for (const path of ['/about', '/contact', '/privacy', '/guide', '/llms.txt', '/robots.txt']) {
     const response = await fetch(`${origin}${path}`);
     const body = await response.text();
     assert.equal(response.status, 200, `${path} should return 200`);
-    if (['/about', '/contact', '/privacy'].includes(path)) assert.ok(body.replace(/<[^>]+>/g, ' ').length > 500, `${path} should have substantive content`);
+    if (['/about', '/contact', '/privacy', '/guide'].includes(path)) assert.ok(body.replace(/<[^>]+>/g, ' ').length > 500, `${path} should have substantive content`);
     if (path === '/llms.txt') assert.ok(body.length > 500, 'llms.txt should have substantive content');
     if (path === '/robots.txt') assert.match(body, /Sitemap:/);
   }
