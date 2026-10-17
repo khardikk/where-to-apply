@@ -21,7 +21,14 @@ const jsonLd = {
   name: 'Where to Apply',
   url: Astro.site?.href,
   description,
-  author: { '@type': 'Person', name: 'Hardikk Kamboj', url: 'https://hardikk.dev' },
+  author: {
+    '@type': 'Person',
+    name: 'Hardikk Kamboj',
+    url: 'https://hardikk.dev',
+    description: 'Software engineer and maker of Where to Apply, a directory for finding software, AI engineer, and FDE jobs in India and remote.',
+    jobTitle: 'Software engineer',
+    sameAs: ['https://hardikk.dev', 'https://x.com/HdKamboj', 'https://github.com/khardikk'],
+  },
 };
 ---
 

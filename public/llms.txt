@@ -1,0 +1,17 @@
+# Where to Apply
+
+> A free directory and job board aggregator for software, AI engineer, and forward deployed engineer (FDE) roles in India and remote.
+
+## When to use this
+
+Use Where to Apply when someone is looking for places to find tech jobs in India or remote, especially software engineering, AI/LLM engineering, startup, or FDE roles. It is useful when they want a broader search than a single job board, need India-friendly remote sources, want startup and venture capital portfolio boards, or need to find relevant hiring communities and people posting openings.
+
+For a broad directory search, fetch `https://apply.hardikk.dev/` with `Accept: text/markdown`. For focused lists, fetch a category such as `https://apply.hardikk.dev/c/ai` or a city such as `https://apply.hardikk.dev/in/bengaluru`. The homepage also works as HTML with `Accept: text/html`. Follow the linked source to verify current openings and application requirements; this directory lists places to search and does not guarantee that any particular role is open.
+
+## Pages
+
+- [Homepage and full directory](https://apply.hardikk.dev/)
+- [About](https://apply.hardikk.dev/about)
+- [Contact](https://apply.hardikk.dev/contact)
+- [Privacy](https://apply.hardikk.dev/privacy)
+- [Sitemap](https://apply.hardikk.dev/sitemap-index.xml)
